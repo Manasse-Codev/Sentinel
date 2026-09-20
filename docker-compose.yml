@@ -1,0 +1,64 @@
+# ============================================================
+# Sentinel — Docker Compose (développement local)
+# ============================================================
+# Services : PostgreSQL 16 + Redis 7
+# Usage    : docker compose up -d
+# ============================================================
+
+name: sentinel
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sentinel-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinel}
+      POSTGRES_DB: ${POSTGRES_DB:-sentinel}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/docker/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sentinel} -d ${POSTGRES_DB:-sentinel}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sentinel-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: sentinel-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - sentinel-net
+
+volumes:
+  postgres_data:
+    name: sentinel_postgres_data
+  redis_data:
+    name: sentinel_redis_data
+
+networks:
+  sentinel-net:
+    name: sentinel-net
+    driver: bridge
