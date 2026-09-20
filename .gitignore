@@ -1,0 +1,85 @@
+# ============================================================
+# Sentinel — .gitignore racine
+# ============================================================
+
+# --- Secrets & env ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# --- Éditeurs ---
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+*.code-workspace
+
+# --- Node / Next.js ---
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+build/
+.turbo/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.Python
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.uv/
+
+# --- Modèles ML ---
+models/
+*.pkl
+*.joblib
+*.h5
+*.onnx
+
+# --- Données locales ---
+data/
+*.sqlite
+*.sqlite3
+*.db
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Docker ---
+.docker/
+docker-compose.override.yml
+
+# --- Divers ---
+.cache/
+tmp/
+temp/
+*.bak
+*.orig
+*.rej
