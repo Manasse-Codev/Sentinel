@@ -56,7 +56,7 @@ htmlcov/
 .uv/
 
 # --- Modèles ML ---
-models/
+/models/
 *.pkl
 *.joblib
 *.h5
